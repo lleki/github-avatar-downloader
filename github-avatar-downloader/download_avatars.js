@@ -3,9 +3,13 @@ var secrets = require('./secrets');
 var fs = require('fs');
 
 var myArgs = process.argv.slice(2);
-console.log('Welcome to the github avatar downloader -Linh');
-console.log('');
 
+//welcome message
+console.log('Welcome to the github avatar downloader -Linh');
+console.log('Please enter two arguments');
+
+
+//get contributors
 function getRepoContributors(repoOwner, repoName, callback){
   var options = {
     url : 'http://api.github.com/repos/' + repoOwner + "/" + repoName + "/contributors",
@@ -18,9 +22,9 @@ function getRepoContributors(repoOwner, repoName, callback){
   request(options, function(err, res, body){
     callback(err, body);
   });
-
 }
 
+//get images with image url from getRepoContributors
 function downloadImageByURL(url, filePath) {
   request.get(url)
        .on('error', function (err) {
@@ -32,19 +36,21 @@ function downloadImageByURL(url, filePath) {
        })
 }
 
+//pass user input into getRepoContributors
 getRepoContributors(myArgs[0], myArgs[1], function(err, result){
-  if(myArgs.length == 0){
+  //make sure user inputs two arguments
+  if (myArgs.length == 0){
     console.log("please enter two values");
-  }else{
-  if (err)
-    { console.log("Errors:", err);
+  } else {
+  if (err){
+    console.log("Errors:", err);
   } else {
     var contributors = JSON.parse(result);
     contributors.forEach(function(contributor) {
-      return downloadImageByURL(contributor.avatar_url, "./avatars" + contributor.login + ".jpg");
-    })
+      return downloadImageByURL(contributor.avatar_url, "./avatars/" + contributor.login + ".jpg");
+      })
+    }
   }
-}
 });
 
 
