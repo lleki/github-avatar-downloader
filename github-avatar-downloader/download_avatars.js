@@ -2,7 +2,9 @@ var request = require('request');
 var secrets = require('./secrets');
 var fs = require('fs');
 
-console.log('Welcome to the github avatar downloader');
+var myArgs = process.argv.slice(2);
+console.log('Welcome to the github avatar downloader -Linh');
+console.log('');
 
 function getRepoContributors(repoOwner, repoName, callback){
   var options = {
@@ -30,7 +32,10 @@ function downloadImageByURL(url, filePath) {
        })
 }
 
-getRepoContributors("jquery", "jquery", function(err, result){
+getRepoContributors(myArgs[0], myArgs[1], function(err, result){
+  if(myArgs.length == 0){
+    console.log("please enter two values");
+  }else{
   if (err)
     { console.log("Errors:", err);
   } else {
@@ -39,6 +44,7 @@ getRepoContributors("jquery", "jquery", function(err, result){
       return downloadImageByURL(contributor.avatar_url, "./avatars" + contributor.login + ".jpg");
     })
   }
+}
 });
 
 
